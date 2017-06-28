@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	id="AMC_WebApp" version="2.5">
+	<display-name>xfire</display-name>
+	<distributable />
+
+	<filter>
+		<filter-name>encoding</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>encoding</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+
+	<!-- 解决http请求不支持Rest中delete和put方法问题 -->
+	<filter>
+		<filter-name>HiddenHttpMethodFilter</filter-name>
+		<filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>HiddenHttpMethodFilter</filter-name>
+		<servlet-name>xfire</servlet-name>
+	</filter-mapping>
+
+	<!-- 必须在HiddenHttpMethodFilter之后运行，否则对HTTP的PUT和DELETE方法将拦截不到 -->
+<!-- 	<filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+ 	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping> -->
+
+	<!-- Spring ApplicationContext配置文件的路径,可使用通配符,多个路径用,号分隔 此参数用于后面的ContextLoaderListener -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/xfire-servlet.xml</param-value>
+	</context-param>
+
+	<!--Spring载入ApplicationContext -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	
+	 <!-- 注意因为servlet-name为xfire，固xfire配置文件名应该是xfire-servlet.xml -->  
+  <servlet>    
+       <servlet-name>xfire</servlet-name>    
+       <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>  
+       <load-on-startup>0</load-on-startup>
+  </servlet>    
+  <servlet-mapping>  
+       <servlet-name>xfire</servlet-name>  
+       <url-pattern>/*</url-pattern>  
+  </servlet-mapping>  
+  
+  
+ <!--  配合Spring容器中XFire一起工作的Servlet-  --> 
+  <servlet>  
+    <servlet-name>XFireServlet</servlet-name>  
+    <servlet-class>  
+    org.codehaus.xfire.transport.http.XFireConfigurableServlet 
+    </servlet-class>  
+    <load-on-startup>2</load-on-startup>
+  </servlet>  
+  <servlet-mapping>  
+    <servlet-name>XFireServlet</servlet-name>  
+    <url-pattern>/services/*</url-pattern>  
+  </servlet-mapping> 
+
+	<error-page>
+		<error-code>400</error-code>
+		<location>/WEB-INF/pages/error/400.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>403</error-code>
+		<location>/WEB-INF/pages/error/403.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>404</error-code>
+		<location>/WEB-INF/pages/error/404.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>412</error-code>
+		<location>/WEB-INF/pages/error/412.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>500</error-code>
+		<location>/WEB-INF/pages/error/500.jsp</location>
+	</error-page>
+	<error-page>
+		<exception-type>java.lang.Throwable</exception-type>
+		<location>/WEB-INF/pages/error/error.jsp</location>
+	</error-page>
+
+	<welcome-file-list>
+		<welcome-file>/index</welcome-file>
+	</welcome-file-list>
+
+	<session-config>
+		<session-timeout>180</session-timeout>
+	</session-config>
+
+
+
+</web-app>

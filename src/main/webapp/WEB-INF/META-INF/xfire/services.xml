@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans >
+	
+    <service xmlns="http://xfire.codehaus.org/config/1.0"> 
+        <name>BookService</name><!-- 当前接口名字 -->
+        <namespace>service/BookService/</namespace><!-- 命名空间，自定义 -->
+        <serviceClass>priv.rlliu.xfire.service.IBookService</serviceClass><!-- 接口全称，包含包名 -->
+        <implementationClass>priv.rlliu.xfire.service.BookServiceImpl</implementationClass><!-- 接口实现类，包含包名 -->
+    </service>
+</beans>
